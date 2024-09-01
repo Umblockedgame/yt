@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comentarios del Video</title>
+</head>
+<body>
+    <h1>Obtener Comentarios de YouTube</h1>
+    <form method="POST" action="/get_comments">
+        <label for="video_url">URL del Video:</label>
+        <input type="text" id="video_url" name="video_url" required>
+        <button type="submit">Obtener Comentarios</button>
+    </form>
+
+    <h2>Comentarios:</h2>
+    <ul>
+        {% for comment in comments %}
+            <li><strong>{{ comment['author'] }}:</strong> {{ comment['text'] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
