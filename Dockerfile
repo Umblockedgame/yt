@@ -1,18 +1,18 @@
-FROM python:3.10
+# Usa una imagen base de Python
+FROM python:3.12-slim
 
-
-
-# Configurar el entorno virtual y las dependencias
+# Establece el directorio de trabajo
 WORKDIR /app
-COPY requirements.txt .
-RUN python -m venv /opt/venv && . /opt/venv/bin/activate \
-    && pip install -r requirements.txt
 
-# Copiar el código de la aplicación
+# Copia los archivos de requerimientos y la aplicación al contenedor
+COPY requirements.txt requirements.txt
 COPY . .
 
-# Exponer el puerto que usará tu aplicación
+# Instala las dependencias
+RUN pip install -r requirements.txt
+
+# Expone el puerto en el que Flask corre por defecto
 EXPOSE 8080
 
-# Comando para iniciar la aplicación
-CMD ["/opt/venv/bin/waitress-serve", "--port", "8080", "main:app"]
+# Comando para ejecutar la aplicación con Waitress
+CMD ["waitress-serve", "--port=8080", "main:app"]
