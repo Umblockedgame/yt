@@ -1,18 +1,19 @@
-# Usa una imagen base de Python
-FROM python:3.12-slim
+FROM python:3.10
 
-# Establece el directorio de trabajo
+# Instalar ffmpeg
+RUN apt-get update 
+
+# Configurar el entorno virtual y las dependencias
 WORKDIR /app
+COPY requirements.txt .
+RUN python -m venv /opt/venv && . /opt/venv/bin/activate \
+    && pip install -r requirements.txt
 
-# Copia los archivos de requerimientos y la aplicación al contenedor
-COPY requirements.txt requirements.txt
+# Copiar el código de la aplicación
 COPY . .
 
-# Instala las dependencias
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Expone el puerto en el que Flask corre por defecto
+# Exponer el puerto que usará tu aplicación
 EXPOSE 8080
 
-# Comando para ejecutar la aplicación con Waitress
-CMD ["waitress-serve", "--port=8080", "main:app"]
+# Comando para iniciar la aplicación
+CMD ["/opt/venv/bin/waitress-serve", "--port", "8080", "main:app"]
