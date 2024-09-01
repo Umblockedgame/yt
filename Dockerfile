@@ -9,7 +9,7 @@ COPY requirements.txt requirements.txt
 COPY . .
 
 # Instala las dependencias
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Expone el puerto en el que Flask corre por defecto
 EXPOSE 8080
