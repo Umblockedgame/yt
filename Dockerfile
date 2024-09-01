@@ -1,14 +1,12 @@
-# Usa una imagen base de Python
-FROM python:3.10-slim
+FROM python:3.10
+
+
 
 # Configurar el entorno virtual y las dependencias
 WORKDIR /app
-
-# Copia los archivos de requerimientos
 COPY requirements.txt .
-
-# Instalar dependencias
-RUN pip install --no-cache-dir -r requirements.txt
+RUN python -m venv /opt/venv && . /opt/venv/bin/activate \
+    && pip install -r requirements.txt
 
 # Copiar el código de la aplicación
 COPY . .
@@ -17,4 +15,4 @@ COPY . .
 EXPOSE 8080
 
 # Comando para iniciar la aplicación
-CMD ["waitress-serve", "--port", "8080", "main:app"]
+CMD ["/opt/venv/bin/waitress-serve", "--port", "8080", "main:app"]
