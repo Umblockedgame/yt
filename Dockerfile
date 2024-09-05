@@ -14,4 +14,4 @@ COPY . .
 EXPOSE 8080
 
 # Comando para iniciar la aplicación con Waitress
-CMD ["waitress-serve", "--port=8080", "main:app"]
+CMD ["waitress-serve", "--host=0.0.0.0", "--port=8080", "app:app"]
