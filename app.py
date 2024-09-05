@@ -1,17 +1,27 @@
-from flask import Flask, render_template, request
-from lib.yt_dl_comments import obtener_comentarios
+import yt_dlp
+import time
 
-app = Flask(__name__)
+def get_video_url_with_proxy(video_url):
+    ydl_opts = {
+        'format': 'best',
+        'noplaylist': True,
+        'quiet': True,
+        'proxy': 'http://35.185.196.38:3128',  # Reemplaza con tu proxy
+        'throttled_rate': 1024,  # Limita la velocidad de descarga para evitar bloqueos
+    }
 
-@app.route('/')
-def index():
-    return render_template('comments.html', comments=[])
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        try:
+            info = ydl.extract_info(video_url, download=False)
+            formats = info.get('formats', [])
+            for f in formats:
+                if f.get('url'):
+                    print(f['url'])
+        except yt_dlp.utils.DownloadError as e:
+            print(f"Error: {e}")
+            # Esperar y reintentar
+            time.sleep(30)  # Espera de 30 segundos antes de reintentar
+            get_video_url_with_proxy(video_url)
 
-@app.route('/get_comments', methods=['POST'])
-def get_comments():
-    video_url = request.form.get('video_url')
-    comments = obtener_comentarios(video_url)
-    return render_template('comments.html', comments=comments)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# Ejemplo de uso
+get_video_url_with_proxy('https://www.youtube.com/watch?v=BVdngsy95mY')
