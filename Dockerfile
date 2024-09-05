@@ -1,13 +1,11 @@
 FROM python:3.10
 
-# Instalar ffmpeg
-RUN apt-get update 
-
-# Configurar el entorno virtual y las dependencias
+# Establecer el directorio de trabajo
 WORKDIR /app
+
+# Copiar y instalar las dependencias
 COPY requirements.txt .
-RUN python -m venv /opt/venv && . /opt/venv/bin/activate \
-    && pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el código de la aplicación
 COPY . .
@@ -15,5 +13,5 @@ COPY . .
 # Exponer el puerto que usará tu aplicación
 EXPOSE 8080
 
-# Comando para iniciar la aplicación
-CMD ["/opt/venv/bin/waitress-serve", "--port", "8080", "main:app"]
+# Comando para iniciar la aplicación con Waitress
+CMD ["waitress-serve", "--port=8080", "main:app"]
